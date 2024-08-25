@@ -3,28 +3,29 @@
 UTF-8 Validation
 """
 
-
 def validUTF8(data):
-    """
-    Process
-    Data: a list of integers
-    Return: True if data is a valid UTF-8
-    encoding, else return False
-    """
-    byte_count = 0
+    num_bytes = 0
 
-    for i in data:
-        if byte_count == 0:
-            if i >> 5 == 0b110 or i >> 5 == 0b1110:
-                byte_count = 1
-            elif i >> 4 == 0b1110:
-                byte_count = 2
-            elif i >> 3 == 0b11110:
-                byte_count = 3
-            elif i >> 7 == 0b1:
+    # Masks to check the significant bits
+    mask1 = 1 << 7
+    mask2 = 1 << 6
+
+    for num in data:
+        mask = 1 << 7
+        if num_bytes == 0:
+            while mask & num:
+                num_bytes += 1
+                mask = mask >> 1
+
+            if num_bytes == 0:
+                continue
+
+            if num_bytes == 1 or num_bytes > 4:
                 return False
         else:
-            if i >> 6 != 0b10:
+            if not (num & mask1 and not (num & mask2)):
                 return False
-            byte_count -= 1
-    return byte_count ==
+
+        num_bytes -= 1
+
+    return num_bytes == 0
