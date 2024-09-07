@@ -109,5 +109,7 @@ def get_solutions():
 
 n = get_input()
 get_solutions()
-for sol in sols:
-    print(sol)
+
+
+for solution in solutions:
+    print(solution)
